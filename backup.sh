@@ -19,7 +19,28 @@ else
 		v) FLAG_VERBOSE=TRUE;;
 		c) echo Create full backup; FLAG_FULL_BACKUP="TRUE";;
 		t) echo "* Еmulation of archive creation"; FLAG_TEST="TRUE";;
-		h) echo "Command help info"; exit 0;
+		h) echo "Usage: backup [OPTION] -A ARCH_DIRECTORY -D DEST"
+		   echo "The DEST directory is archived into files that will be located in ARCH_DIRECTORY"
+		   echo "note: a folder with infomation about the backup is created in the DEST directory."
+		   echo ""
+		   echo "-A ARCH_DIRECTORY	directory where files with archive will be located"
+		   echo "-F DEST	folder which to be archived"
+		   echo "-d DAY"
+		   echo "-m MONTH	Script testing flags"
+		   echo "-y	YEAR"
+		   echo "-v	verbose"
+		   echo "-c	create full backup"
+		   echo "-t	emulate of work script"
+		   echo "-h	this text"
+		   echo "Full backup will create at first time run or using key -c, in other case backup will"
+		   echo "contain incremental copy of data for the current date. To check work of the script"
+		   echo "use keys -m, -d, -y they change the date to the specified. The following files will be placed "
+		   echo "in the ARCH_DIRECTORY: "
+		   echo "DirName-YEAR.tgz	full or incremental of the year backup file"
+		   echo "DirName-MONTH.tgz	incremental archive for the month"
+		   echo "DirName-WEEK.tgz	incremental archive for the week"
+		   echo "For restore full current backup need to unpack all year archives, then all month, then all week."
+		   exit 0;;
 	esac
  done
  if [[ -z $DAY ]]; then DAY=$(date +%d); fi
