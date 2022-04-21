@@ -149,7 +149,8 @@ elif [[ $FLAG_VERBOSE = "TRUE" ]]; then
  --file=$ARCHPATH/$INC_FILE.tgz-tmp \
  --ignore-failed-read \
  --listed-incremental=$SDDIR/$INC_FILE.snar-tmp \
- $DEST 
+ $DEST
+ TAR_RESULT=$?
  FCREATE="TRUE"
 else
  tar --create \
@@ -159,11 +160,15 @@ else
  --ignore-failed-read \
  --listed-incremental=$SDDIR/$INC_FILE.snar-tmp \
  $DEST
+ TAR_RESULT=$?
  FCREATE="TRUE"
 fi
-
-if [[ $FCREATE="TRUE" ]]; then
- echo "Backup was successfully created"
+echo 
+# если стоит флаг создания архива и результат выполнения равен 0, переименовываем временные файлы в постоянные
+if [[ ($FCREATE="TRUE" && $TAR_RESULT = 0) ]]; then
+ echo "Backup created successfully"
  mv -fv $SDDIR/$INC_FILE.snar-tmp $SDDIR/$INC_FILE.snar
  mv -fv $ARCHPATH/$INC_FILE.tgz-tmp $ARCHPATH/$INC_FILE.tgz
+else
+ >&2 echo "Backup creation failed!" 
 fi
