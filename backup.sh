@@ -17,7 +17,16 @@ else
 		m) MONTH=${OPTARG};;
 		y) YEAR=${OPTARG};;
 		v) FLAG_VERBOSE=TRUE;;
-		c) echo Create full backup; FLAG_FULL_BACKUP="TRUE";;
+		c) echo "Create full backup. All data of the changes will be delete!"
+		   echo -n "Do you want to delete all incremental archive files and create a full backup? " 
+		   read RESP
+		   RESP=$(echo "$RESP" | cut -b 1 | tr [:lower:] [:upper:])
+		   if [[ $RESP = "Y" ]]; then
+			FLAG_FULL_BACKUP="TRUE"
+		   else
+			echo "Script aborted"
+			exit 0
+		   fi;;
 		t) echo "* Еmulation of archive creation"; FLAG_TEST="TRUE";;
 		h) echo "Usage: backup [OPTION] -A ARCH_DIRECTORY -D DEST"
 		   echo "The DEST directory is archived into files that will be located in ARCH_DIRECTORY"
