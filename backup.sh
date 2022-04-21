@@ -71,6 +71,7 @@ fi
 SDDIR=$DEST/.sync-data
 DNAME=$(basename $DEST) 
 
+echo "Arcivate directory name: $DNAME"									  
 if [[ (-n $FLAG_FULL_BACKUP) ]]; then
  rm $SDDIR/*;
 fi
@@ -104,11 +105,11 @@ if [[ !(-f $SDDIR/$DNAME-$YEAR.snar) ]]; then
  INC_FILE="$DNAME-$YEAR"
  # если существует инкрементный файла с прошлого года используем его
  if [[ -f $SDDIR/$DNAME-$(($YEAR-1)).snar ]]; then
-  echo "copy last year list"
+  echo "copy last year \"$DNAME-$(($YEAR-1)).snar\" list"
   cp "$SDDIR/$DNAME-$(( $YEAR-1 )).snar"  "$SDDIR/$INC_FILE.snar-tmp"
  fi
  rm $SDDIR/$DNAME-m*.snar 2>/dev/null
- echo "Creation of an annual backup"
+ echo "Creation of an annual backup..."
 elif [[ !(-f $SDDIR/$DNAME-m$MONTH.snar) ]]; then
  INC_FILE="$DNAME-m$MONTH"
  #проверка наличия месячного инкрементного файла
@@ -118,26 +119,26 @@ elif [[ !(-f $SDDIR/$DNAME-m$MONTH.snar) ]]; then
   cp $FILE_MONTH $SDDIR/$INC_FILE.snar-tmp
  else
   # если нет месячного файла копируем его из годового
-  echo "copy year encrement list file to month"
+  echo "copy year encrement list file \"$SDDIR/$DNAME-$YEAR.snar\" to month"
   cp $SDDIR/$DNAME-$YEAR.snar $SDDIR/$INC_FILE.snar-tmp
  fi
  rm $SDDIR/$DNAME-w*.snar 2>/dev/null
- echo "Creation of a monthly backup"
+ echo "Creation of a monthly backup..."
 else
  INC_FILE="$DNAME-w$NUMWEEK"
  #проверка наличия недельного инкрементного файла
  FILE-WEEK=$(ls -1 $SDDIR/$DNAME-w*.snar 2>/dev/null |tail -n 1)
  if [[ $FILE_WEEK != $SDDIR/$INC_FILE.snar ]]; then
   if [[ -f $FILE-WEEK ]]; then
-   echo "copy some week encrement list file"
+   echo "copy week encrement list file \"$FILE-WEEK\""
    cp $FILE-WEEK $SDDIR/$INC_FILE.snar-tmp
   else
    # если нет недельного файла копируем его из месячного
-   echo "copy month encrement list file to week"
+   echo "copy month encrement list file \"$SDDIR/$DNAME-m$MONTH.snar\" to week"
    cp $SDDIR/$DNAME-m$MONTH.snar $SDDIR/$INC_FILE.snar-tmp
   fi
  fi
- echo "Creation of a weekly backup"
+ echo "Creation of a weekly backup..."
 fi
 
 # создаём архив
