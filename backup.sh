@@ -65,7 +65,7 @@ fi
 if [[ !( -d $DEST ) ]]; then
  >&2 echo "Archive directory $DEST is not found"
  echo "Try -h key for command help"
- exit
+ exit 1
 fi
 
 SDDIR=$DEST/.sync-data
