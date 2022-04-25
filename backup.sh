@@ -57,19 +57,20 @@ else
  if [[ -z $YEAR ]]; then YEAR=$(date +%Y); fi
 fi
 
+SDDIR=$DEST/.sync-data
+DNAME=$(basename $DEST) 
+
 if [[ !( -d $ARCHPATH ) ]]; then
  >&2 echo "Directory for archivation $ARCHPATH is not found"
  echo "Try -h key for command help"
  exit 1
 fi
+
 if [[ !( -d $DEST ) ]]; then
  >&2 echo "Archive directory $DEST is not found"
  echo "Try -h key for command help"
  exit 1
 fi
-
-SDDIR=$DEST/.sync-data
-DNAME=$(basename $DEST) 
 
 echo "Arcivate directory name: $DNAME"									  
 if [[ (-n $FLAG_FULL_BACKUP) ]]; then
@@ -98,6 +99,12 @@ echo "Using date: $DAY - $MONTH - $YEAR"
 if [[ !(-d $DEST/.sync-data) ]]; then
  echo create archives data folder
  mkdir $DEST/.sync-data
+fi
+
+#если скрипт запущен не в Линксах, значит выставляем атрибуты скрытой папки
+if [[ $(uname -o) != "GNU/Linux" ]]; then
+ cd $DEST
+ attrib +H .sync-data
 fi
 
 # если не существует годового инкрементного файла
@@ -181,4 +188,5 @@ if [[ ($FCREATE="TRUE" && $TAR_RESULT = 0) ]]; then
  mv -fv $ARCHPATH/$INC_FILE.tgz-tmp $ARCHPATH/$INC_FILE.tgz
 else
  >&2 echo "Backup creation failed!" 
+ exit 1
 fi
